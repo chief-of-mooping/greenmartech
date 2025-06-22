@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green MarTech Analytics</title>
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiR3JlZW4gTWFyVGVjaCBBbmFseXRpY3MiLCJzaG9ydF9uYW1lIjoiR3JlZW5NYXJUZWNoIiwidGhlbWVfY29sb3IiOiIjMGY3MjM3IiwiYmFja2dyb3VuZF9jb2xvciI6IiNmZmZmZmYiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsInN0YXJ0X3VybCI6Ii8iLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTWpRaUlHaGxhV2RvZEQwaU1qUWlJSFpwWlhkQ2IzZzlJakFnTUNBeU5DQXlOQ0lnWm1sc2JEMGlJekJtTnpJek55SStQR05wY21Oc1pTQmplRDBpTVRJaUlHTjVQU0l4TWlJZ2NqMGlPU0lnWm1sc2JEMGlJelZqT1RRNU1TSXZQand2YzNablBnPT0iLCJzaXplcyI6IjI0eDI0IiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+    <meta name="theme-color" content="#0f7237">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzBmNzIzNyI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iOSIgZmlsbD0iIzVjOTQ5MSIvPjwvc3ZnPg==">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f7237 0%, #5c9491 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .header h1 {
+            color: #0f7237;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .eco-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #0f7237, #5c9491);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .green-bg { background: linear-gradient(45deg, #0f7237, #22c55e); }
+        .blue-bg { background: linear-gradient(45deg, #1e40af, #3b82f6); }
+        .purple-bg { background: linear-gradient(45deg, #7c3aed, #a855f7); }
+        .orange-bg { background: linear-gradient(45deg, #ea580c, #f97316); }
+
+        .card h3 {
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .metric {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #0f7237;
+            margin: 15px 0;
+        }
+
+        .chart-container {
+            height: 200px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0f7237, #22c55e);
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: linear-gradient(45deg, #0f7237, #5c9491);
+            color: white;
+            box-shadow: 0 4px 15px rgba(15,114,55,0.3);
+        }
+
+        .tab:not(.active) {
+            color: #666;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(15,114,55,0.1);
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-left: 4px solid #22c55e;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .insight-card h4 {
+            color: #0f7237;
+            margin-bottom: 10px;
+        }
+
+        .campaign-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active { background: #dcfce7; color: #0f7237; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-completed { background: #dbeafe; color: #1e40af; }
+
+        .floating-action {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #0f7237, #22c55e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(15,114,55,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .floating-action:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+        }
+
+        /* PWA Install Prompt Styles */
+        .install-prompt {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            max-width: 300px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .install-prompt.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .install-btn {
+            background: linear-gradient(45deg, #0f7237, #22c55e);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <div class="eco-icon">🌱</div>
+                Green MarTech Analytics
+            </h1>
+            <p>ระบบวิเคราะห์การตลาดเพื่อสิ่งแวดล้อม - ติดตาม วัดผล และเพิ่มประสิทธิภาพ Green Marketing Campaigns</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)">📊 Dashboard</div>
+            <div class="tab" onclick="switchTab(1)">🎯 Campaigns</div>
+            <div class="tab" onclick="switchTab(2)">👥 Audience</div>
+            <div class="tab" onclick="switchTab(3)">💡 Insights</div>
+            <div class="tab" onclick="switchTab(4)">📱 Social</div>
+            <div class="tab" onclick="switchTab(5)">📈 Reports</div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div class="content-section active" id="section-0">
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green-bg">📈</div>
+                        <h3>Green Engagement Rate</h3>
+                    </div>
+                    <div class="metric">78.5%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 78.5%"></div>
+                    </div>
+                    <p>เพิ่มขึ้น 12% จากเดือนที่แล้ว</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue-bg">🌍</div>
+                        <h3>Sustainability Score</h3>
+                    </div>
+                    <div class="metric">8.7/10</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 87%"></div>
+                    </div>
+                    <p>Brand perception ด้าน sustainability</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon purple-bg">💚</div>
+                        <h3>Eco-Conscious Audience</h3>
+                    </div>
+                    <div class="metric">45,231</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%"></div>
+                    </div>
+                    <p>ผู้ที่สนใจ sustainable products</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon orange-bg">♻️</div>
+                        <h3>Green Content ROI</h3>
+                    </div>
+                    <div class="metric">324%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 90%"></div>
+                    </div>
+                    <p>Return on Investment จาก green content</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green-bg">📱</div>
+                        <h3>Social Sentiment</h3>
+                    </div>
+                    <div class="chart-container">
+                        <div style="text-align: center;">
+                            <div style="font-size: 3rem; color: #22c55e; margin-bottom: 10px;">😊</div>
+                            <div style="font-size: 1.5rem; color: #0f7237;">Positive 82%</div>
+                            <div style="color: #666;">Neutral 15% | Negative 3%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue-bg">🎯</div>
+                        <h3>Campaign Performance</h3>
+                    </div>
+                    <div class="chart-container">
+                        <div style="width: 100%; height: 100%; display: flex; align-items: end; justify-content: space-around; padding: 20px;">
+                            <div style="width: 20px; background: #22c55e; height: 60%; border-radius: 3px;"></div>
+                            <div style="width: 20px; background: #3b82f6; height: 80%; border-radius: 3px;"></div>
+                            <div style="width: 20px; background: #a855f7; height: 45%; border-radius: 3px;"></div>
+                            <div style="width: 20px; background: #f97316; height: 90%; border-radius: 3px;"></div>
+                            <div style="width: 20px; background: #22c55e; height: 70%; border-radius: 3px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaigns Section -->
+        <div class="content-section" id="section-1">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon green-bg">🎯</div>
+                    <h3>Active Green Campaigns</h3>
+                </div>
+                
+                <div class="campaign-item">
+                    <div>
+                        <strong>Earth Day 2025 Campaign</strong>
+                        <div style="color: #666; font-size: 0.9rem;">Social Media & Email Marketing</div>
+                    </div>
+                    <span class="status-badge status-active">Active</span>
+                </div>
+
+                <div class="campaign-item">
+                    <div>
+                        <strong>Sustainable Product Launch</strong>
+                        <div style="color: #666; font-size: 0.9rem;">Content Marketing & PR</div>
+                    </div>
+                    <span class="status-badge status-pending">Planning</span>
+                </div>
+
+                <div class="campaign-item">
+                    <div>
+                        <strong>Zero Waste Challenge</strong>
+                        <div style="color: #666; font-size: 0.9rem;">User Generated Content</div>
+                    </div>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audience Section -->
+        <div class="content-section" id="section-2">
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon purple-bg">👥</div>
+                        <h3>Eco-Conscious Segments</h3>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>Green Millennials</strong>
+                            <div style="color: #666;">อายุ 25-40, รายได้กลาง-สูง</div>
+                        </div>
+                        <span style="color: #0f7237; font-weight: bold;">18,420</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>Sustainable Families</strong>
+                            <div style="color: #666;">ครอบครัวที่มีเด็ก, ใส่ใจสิ่งแวดล้อม</div>
+                        </div>
+                        <span style="color: #0f7237; font-weight: bold;">12,840</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>Eco Entrepreneurs</strong>
+                            <div style="color: #666;">ผู้ประกอบการ green business</div>
+                        </div>
+                        <span style="color: #0f7237; font-weight: bold;">7,234</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue-bg">🌍</div>
+                        <h3>Geographic Distribution</h3>
+                    </div>
+                    <div class="chart-container">
+                        <div style="width: 100%; text-align: center;">
+                            <div style="margin: 10px 0;"><strong>กรุงเทพฯ:</strong> 35%</div>
+                            <div style="margin: 10px 0;"><strong>เชียงใหม่:</strong> 18%</div>
+                            <div style="margin: 10px 0;"><strong>ภูเก็ต:</strong> 12%</div>
+                            <div style="margin: 10px 0;"><strong>อื่นๆ:</strong> 35%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Section -->
+        <div class="content-section" id="section-3">
+            <div class="insight-card">
+                <h4>🔍 Key Insight: Peak Engagement Times</h4>
+                <p>Green content มี engagement สูงสุดช่วง 7-9 โมงเช้า และ 6-8 โมงเย็น เนื่องจากเป็นช่วงที่คนคิดถึงการใช้ชีวิตอย่างยั่งยืน</p>
+            </div>
+
+            <div class="insight-card">
+                <h4>📊 Trend Analysis</h4>
+                <p>Content เกี่ยวกับ "Zero Waste Lifestyle" มี engagement rate สูงกว่าเนื้อหาอื่น 45% และมีการแชร์มากที่สุด</p>
+            </div>
+
+            <div class="insight-card">
+                <h4>🎯 Recommendation</h4>
+                <p>ควรเพิ่ม video content เกี่ยวกับ DIY sustainable products เนื่องจากมีอัตราการดู completion rate 78%</p>
+            </div>
+
+            <div class="insight-card">
+                <h4>⚠️ Alert</h4>
+                <p>Audience segment "Young Professionals" มี engagement ลดลง 8% ในสัปดาห์ที่ผ่านมา - แนะนำปรับ content strategy</p>
+            </div>
+        <!-- Social Media Monitoring Section -->
+        <div class="content-section" id="section-4">
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green-bg">📱</div>
+                        <h3>Social Media Sentiment</h3>
+                    </div>
+                    <div class="chart-container">
+                        <div style="display: flex; justify-content: space-around; align-items: center; height: 100%;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; color: #22c55e;">😊</div>
+                                <div><strong>Positive</strong></div>
+                                <div style="color: #22c55e; font-weight: bold;">1,247</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; color: #fbbf24;">😐</div>
+                                <div><strong>Neutral</strong></div>
+                                <div style="color: #f59e0b; font-weight: bold;">234</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; color: #ef4444;">😟</div>
+                                <div><strong>Negative</strong></div>
+                                <div style="color: #ef4444; font-weight: bold;">67</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue-bg">🌍</div>
+                        <h3>Trending Green Topics</h3>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>#ZeroWaste</strong>
+                            <div style="color: #666;">12,847 mentions</div>
+                        </div>
+                        <span style="color: #22c55e;">↗️ +25%</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>#SustainableLiving</strong>
+                            <div style="color: #666;">8,234 mentions</div>
+                        </div>
+                        <span style="color: #22c55e;">↗️ +18%</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>#EcoFriendly</strong>
+                            <div style="color: #666;">6,892 mentions</div>
+                        </div>
+                        <span style="color: #ef4444;">↘️ -5%</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon purple-bg">🔥</div>
+                        <h3>Viral Green Content</h3>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>DIY Bamboo Toothbrush Tutorial</strong>
+                            <div style="color: #666;">TikTok • 2.3M views</div>
+                        </div>
+                        <span style="color: #22c55e;">🔥</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>Ocean Cleanup Challenge</strong>
+                            <div style="color: #666;">Instagram • 890K likes</div>
+                        </div>
+                        <span style="color: #3b82f6;">💙</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>Plant-Based Recipe Series</strong>
+                            <div style="color: #666;">YouTube • 1.2M views</div>
+                        </div>
+                        <span style="color: #22c55e;">🌱</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon orange-bg">📊</div>
+                        <h3>Platform Performance</h3>
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>Instagram</span>
+                            <span style="color: #0f7237; font-weight: bold;">84%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 84%; background: linear-gradient(90deg, #e1306c, #fd1d1d);"></div>
+                        </div>
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>TikTok</span>
+                            <span style="color: #0f7237; font-weight: bold;">76%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 76%; background: linear-gradient(90deg, #ff0050, #00f2ea);"></div>
+                        </div>
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>Facebook</span>
+                            <span style="color: #0f7237; font-weight: bold;">68%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 68%; background: linear-gradient(90deg, #1877f2, #42a5f5);"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green-bg">⚡</div>
+                        <h3>Real-time Alerts</h3>
+                    </div>
+                    <div class="insight-card" style="margin: 10px 0; background: linear-gradient(135deg, #fef3c7, #fde68a);">
+                        <h4 style="color: #92400e;">🚨 Trending Alert</h4>
+                        <p style="color: #92400e;">"Plastic-free July" กำลัง trending - เพิ่ม content ใหม่เลย!</p>
+                    </div>
+                    <div class="insight-card" style="margin: 10px 0; background: linear-gradient(135deg, #dbeafe, #bfdbfe);">
+                        <h4 style="color: #1e40af;">💡 Opportunity</h4>
+                        <p style="color: #1e40af;">Competitor's campaign performance ลดลง 12% - โอกาสดีในการขยาย reach</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue-bg">🎯</div>
+                        <h3>Influencer Partnerships</h3>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>@EcoWarriorTH</strong>
+                            <div style="color: #666;">145K followers • Sustainability</div>
+                        </div>
+                        <span class="status-badge status-active">Active</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>@ZeroWasteLife</strong>
+                            <div style="color: #666;">89K followers • Lifestyle</div>
+                        </div>
+                        <span class="status-badge status-pending">Negotiating</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>@GreenFoodieDaily</strong>
+                            <div style="color: #666;">203K followers • Food</div>
+                        </div>
+                        <span class="status-badge status-completed">Completed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div class="content-section" id="section-5">
+            <div class="dashboard">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green-bg">📊</div>
+                        <h3>Performance Reports</h3>
+                    </div>
+                    <div class="campaign-item" onclick="generateReport('monthly')">
+                        <div>
+                            <strong>Monthly Green Marketing Report</strong>
+                            <div style="color: #666;">Complete analysis & recommendations</div>
+                        </div>
+                        <span style="color: #0f7237;">📄 Generate</span>
+                    </div>
+                    <div class="campaign-item" onclick="generateReport('competitor')">
+                        <div>
+                            <strong>Competitor Analysis Report</strong>
+                            <div style="color: #666;">Benchmark vs industry leaders</div>
+                        </div>
+                        <span style="color: #0f7237;">📄 Generate</span>
+                    </div>
+                    <div class="campaign-item" onclick="generateReport('roi')">
+                        <div>
+                            <strong>ROI & Attribution Report</strong>
+                            <div style="color: #666;">Track investment returns</div>
+                        </div>
+                        <span style="color: #0f7237;">📄 Generate</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue-bg">📈</div>
+                        <h3>Custom Analytics</h3>
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600;">Date Range:</label>
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <input type="date" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; flex: 1;">
+                            <input type="date" style="padding: 8px; border: 1px solid #ddd; border-radius: 5px; flex: 1;">
+                        </div>
+                    </div>
+                    <div style="margin: 20px 0;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600;">Metrics:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <label><input type="checkbox" checked> Engagement Rate</label>
+                            <label><input type="checkbox" checked> Reach</label>
+                            <label><input type="checkbox"> Click-through Rate</label>
+                            <label><input type="checkbox"> Conversion Rate</label>
+                            <label><input type="checkbox"> Share Rate</label>
+                            <label><input type="checkbox"> Sentiment Score</label>
+                        </div>
+                    </div>
+                    <button class="install-btn" onclick="createCustomReport()">Create Report</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon purple-bg">🎯</div>
+                        <h3>Campaign Comparison</h3>
+                    </div>
+                    <div class="chart-container">
+                        <div style="display: flex; justify-content: space-around; align-items: end; height: 150px; padding: 20px;">
+                            <div style="text-align: center;">
+                                <div style="width: 40px; background: #22c55e; height: 80px; border-radius: 5px; margin: 0 auto 10px;"></div>
+                                <small>Earth Day</small>
+                                <div style="font-weight: bold; color: #0f7237;">8.7/10</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="width: 40px; background: #3b82f6; height: 95px; border-radius: 5px; margin: 0 auto 10px;"></div>
+                                <small>Zero Waste</small>
+                                <div style="font-weight: bold; color: #0f7237;">9.2/10</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="width: 40px; background: #a855f7; height: 60px; border-radius: 5px; margin: 0 auto 10px;"></div>
+                                <small>Eco Products</small>
+                                <div style="font-weight: bold; color: #0f7237;">7.1/10</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="width: 40px; background: #f97316; height: 110px; border-radius: 5px; margin: 0 auto 10px;"></div>
+                                <small>Sustainability</small>
+                                <div style="font-weight: bold; color: #0f7237;">9.8/10</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon orange-bg">📊</div>
+                        <h3>Export Options</h3>
+                    </div>
+                    <div class="campaign-item" onclick="exportData('excel')">
+                        <div>
+                            <strong>Excel Spreadsheet</strong>
+                            <div style="color: #666;">Detailed data for analysis</div>
+                        </div>
+                        <span style="color: #0f7237;">📊 Export</span>
+                    </div>
+                    <div class="campaign-item" onclick="exportData('pdf')">
+                        <div>
+                            <strong>PDF Report</strong>
+                            <div style="color: #666;">Professional presentation format</div>
+                        </div>
+                        <span style="color: #0f7237;">📄 Export</span>
+                    </div>
+                    <div class="campaign-item" onclick="exportData('csv')">
+                        <div>
+                            <strong>CSV Data</strong>
+                            <div style="color: #666;">Raw data for external tools</div>
+                        </div>
+                        <span style="color: #0f7237;">📈 Export</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon green-bg">🔗</div>
+                        <h3>API Integrations</h3>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>Google Analytics</strong>
+                            <div style="color: #666;">Website traffic & conversions</div>
+                        </div>
+                        <span class="status-badge status-active">Connected</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>Facebook/Instagram</strong>
+                            <div style="color: #666;">Social media metrics</div>
+                        </div>
+                        <span class="status-badge status-active">Connected</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>TikTok for Business</strong>
+                            <div style="color: #666;">Short-form video analytics</div>
+                        </div>
+                        <span class="status-badge status-pending">Setup Needed</span>
+                    </div>
+                    <div class="campaign-item">
+                        <div>
+                            <strong>Mailchimp</strong>
+                            <div style="color: #666;">Email marketing data</div>
+                        </div>
+                        <span class="status-badge status-completed">Connected</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Floating Action Button -->
+    <div class="floating-action" onclick="showAddCampaign()">+</div>
+
+    <!-- PWA Install Prompt -->
+    <div class="install-prompt" id="installPrompt">
+        <h3>📱 ติดตั้ง Green MarTech</h3>
+        <p>เพื่อการใช้งานที่สะดวกยิ่งขึ้น</p>
+        <button class="install-btn" onclick="installPWA()">ติดตั้งแอป</button>
+        <button style="background: none; border: none; color: #666; margin-top: 10px; cursor: pointer;" onclick="hideInstallPrompt()">ไม่ใช่ตอนนี้</button>
+    </div>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript;base64,Y29uc3QgQ0FDSEVfTkFNRSA9ICdncmVlbi1tYXJ0ZWNoLXYxJzsgY29uc3QgdXJsc1RvQ2FjaGUgPSBbJy8nXTsgc2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZnVuY3Rpb24oZXZlbnQpIHsgZXZlbnQud2FpdFVudGlsKCBjYWNoZXMub3BlbihDQUNIRV9OQU1FKSAudGhlbihmdW5jdGlvbihjYWNoZSkgeyByZXR1cm4gY2FjaGUuYWRkQWxsKHVybHNUb0NhY2hlKTsgfSkgKTsgfSk7IHNlbGYuYWRkRXZlbnRMaXN0ZW5lcignZmV0Y2gnLCBmdW5jdGlvbihldmVudCkgeyBldmVudC5yZXNwb25kV2l0aCggY2FjaGVzLm1hdGNoKGV2ZW50LnJlcXVlc3QpIC50aGVuKGZ1bmN0aW9uKHJlc3BvbnNlKSB7IGlmIChyZXNwb25zZSkgeyByZXR1cm4gcmVzcG9uc2U7IH0gcmV0dXJuIGZldGNoKGV2ZW50LnJlcXVlc3QpOyB9KSApOyB9KTs=');
+        }
+
+        // Tab switching functionality
+        function switchTab(index) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(`section-${index}`).classList.add('active');
+            
+            // Update tab styles
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabs[index].classList.add('active');
+        }
+
+        // PWA Install functionality
+        let deferredPrompt;
+        let installPromptShown = false;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install prompt after 5 seconds
+            if (!installPromptShown) {
+                setTimeout(() => {
+                    showInstallPrompt();
+                }, 5000);
+            }
+        });
+
+        function showInstallPrompt() {
+            const prompt = document.getElementById('installPrompt');
+            prompt.classList.add('show');
+            installPromptShown = true;
+        }
+
+        function hideInstallPrompt() {
+            const prompt = document.getElementById('installPrompt');
+            prompt.classList.remove('show');
+        }
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((result) => {
+                    if (result.outcome === 'accepted') {
+                        console.log('PWA installed');
+                    }
+                    deferredPrompt = null;
+                    hideInstallPrompt();
+                });
+            }
+        }
+
+        // Sample functionality for floating action button
+        function showAddCampaign() {
+            const options = [
+                '🌱 สร้าง Green Campaign ใหม่',
+                '📊 เพิ่ม Custom Metric',
+                '🎯 ตั้งค่า Alert',
+                '📱 เชื่อมต่อ Social Platform',
+                '📈 สร้าง A/B Test',
+                '🔔 ตั้งค่า Notification'
+            ];
+            
+            const choice = prompt(`เลือกฟีเจอร์ที่ต้องการ:\n\n${options.map((opt, i) => `${i+1}. ${opt}`).join('\n')}\n\nกรอกหมายเลข 1-6:`);
+            
+            if (choice >= 1 && choice <= 6) {
+                alert(`✅ เลือก: ${options[choice-1]}\n\n🚧 ฟีเจอร์นี้กำลังพัฒนา\n🔜 จะเปิดใช้งานเร็วๆ นี้!`);
+            }
+        }
+
+        // Report generation functions
+        function generateReport(type) {
+            const reportTypes = {
+                'monthly': 'Monthly Green Marketing Report',
+                'competitor': 'Competitor Analysis Report', 
+                'roi': 'ROI & Attribution Report'
+            };
+            
+            // Simulate report generation
+            const loadingMsg = `กำลังสร้าง ${reportTypes[type]}...\n\n📊 รวบรวมข้อมูล...\n📈 วิเคราะห์ metrics...\n📄 สร้างรายงาน...`;
+            alert(loadingMsg);
+            
+            setTimeout(() => {
+                alert(`✅ ${reportTypes[type]} พร้อมแล้ว!\n\n📧 ส่งไปที่ email แล้ว\n💾 บันทึกใน dashboard\n🔗 Link: report-${type}-${Date.now()}.pdf`);
+            }, 2000);
+        }
+
+        function createCustomReport() {
+            alert('🎯 Custom Report\n\n✅ กำลังสร้างรายงานตามที่กำหนด...\n📊 รวมข้อมูล metrics ที่เลือก\n📅 ช่วงเวลาที่กำหนด\n\n⏳ รายงานจะพร้อมใน 2-3 นาที');
+        }
+
+        function exportData(format) {
+            const formats = {
+                'excel': 'Excel Spreadsheet (.xlsx)',
+                'pdf': 'PDF Report (.pdf)',
+                'csv': 'CSV Data (.csv)'
+            };
+            
+            alert(`📥 Export เป็น ${formats[format]}\n\n✅ กำลังเตรียมข้อมูล...\n💾 ไฟล์จะถูกดาวน์โหลดใน 5 วินาที\n📧 และส่งไปที่ email ของคุณ`);
+        }
+
+        // Simulate real-time data updates
+        function updateMetrics() {
+            const metrics = document.querySelectorAll('.metric');
+            metrics.forEach(metric => {
+                if (metric.textContent.includes('%')) {
+                    const current = parseFloat(metric.textContent);
+                    const change = (Math.random() - 0.5) * 2; // ±1%
+                    const newValue = Math.max(0, Math.min(100, current + change));
+                    metric.textContent = newValue.toFixed(1) + '%';
+                }
+            });
+        }
+
+        // Update metrics every 30 seconds
+        setInterval(updateMetrics, 30000);
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate progress bars on load
+            setTimeout(() => {
+                const progressBars = document.querySelectorAll('.progress-fill');
+                progressBars.forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                });
+            }, 500);
+        });
+
+        // Add click tracking for analytics
+        document.addEventListener('click', function(e) {
+            console.log('Click tracked:', e.target.tagName, e.target.textContent?.slice(0, 50));
+        });
+    </script>
+</body>
+</html>
